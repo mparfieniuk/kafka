@@ -145,7 +145,8 @@ Now we have all Kafka and Zookeeper up and running, we can start trying out some
 
   ```
   {"f1": "value1"}
-  {"f1": "value2"}
+  {"f1": "value2
+  n
   {"f1": "value3"}
   ```
 
@@ -207,15 +208,16 @@ Consume data via the REST Proxy.
 ### Stream Monitoring
 We will walk you through how to run Confluent Control Center with console producers and consumers and monitor consumption and latency.
 
-    First, let’s launch Confluent Control Center. We already have ZooKeeper and Kafka up and running from the steps above. Let’s make a directory on the host for Control Center data. If you are running Docker Machine then you will need to SSH into the VM to run these commands by running `docker-machine ssh <your machine name>` and run the command as root.
+  First, let’s launch Confluent Control Center. We already have ZooKeeper and Kafka up and running from the steps above. Let’s make a directory on the host for Control Center data. If you are running Docker Machine then you will need to SSH into the VM to run these commands by running `docker-machine ssh <your machine name>` and run the command as root.
 
     ```
     mkdir -p /tmp/control-center/data
     ```
 
-    Now we start Control Center and bind it’s data directory to the directory we just created and bind it’s HTTP interface to port 9021.
+  Now we start Control Center and bind it’s data directory to the directory we just created and bind it’s HTTP interface to port 9021.
 
-    ```bash
+    ```
+    bash
     docker run -d \
       --name=control-center \
       --net=host \
@@ -230,7 +232,7 @@ We will walk you through how to run Confluent Control Center with console produc
       -e CONTROL_CENTER_STREAMS_NUM_STREAM_THREADS=2 \
       -e CONTROL_CENTER_CONNECT_CLUSTER=http://localhost:28082 \
       confluentinc/cp-enterprise-control-center:3.1.1
-  ```
+    ```
 
   Control Center will create the topics it needs in Kafka. Check that it started correctly by searching it’s logs with the following command:
 
@@ -245,6 +247,7 @@ We will walk you through how to run Confluent Control Center with console produc
   [2016-08-26 18:47:26,811] INFO Started @5211ms (org.eclipse.jetty.server.Server)
   ```
 
+
   To see the Control Center UI, navigate in a browser using HTTP to port 9021 of the docker host. If you’re using docker-machine, you can get your host IP by running `docker-machine ip <your machine name>`. If your docker daemon is running on a remote machine (such as an AWS EC2 instance), you’ll need to open port 9021 to allow outside TCP access. In AWS, you do this by adding a “Custom TCP Rule” to the security group for port 9021 from any source IP.
 
   Initially, the Stream Monitoring UI will have no data.
@@ -252,6 +255,7 @@ We will walk you through how to run Confluent Control Center with console produc
   ![Signup](/img/c3-quickstart-init.png)
 
   Next, we’ll run the console producer and consumer with monitoring interceptors configured and see the data in Control Center. First we need to create a topic for testing.
+
 
   ```
   docker run \
