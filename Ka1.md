@@ -309,7 +309,7 @@ We will walk you through how to run Confluent Control Center with console produc
 
   We’ve intentionally setup a slow consumer to consume at a rate of 1000 messages per second. After 15 seconds have passed, you should see monitoring activity reflected in the Control Center UI. You will notice there will be moments where the bars are colored red to reflect the slow consumption of data.
 
-  [!Signup](/img/c3-quickstart-monitoring-data.png)
+  ![Signup](/img/c3-quickstart-monitoring-data.png)
 
 ###Alerts
 
