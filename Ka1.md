@@ -13,7 +13,8 @@ docker run -d \
 
 ### Note!
 ```
-You’ll notice that we set the KAFKA_ADVERTISED_LISTENERS variable to localhost:29092. This will make Kafka accessible from outside the container by advertising it’s location on the Docker host.
+You’ll notice that we set the KAFKA_ADVERTISED_LISTENERS variable to localhost:29092.
+This will make Kafka accessible from outside the container by advertising it’s location on the Docker host.
 ```
 
 Let’s check the logs to see the broker has booted up successfully:
@@ -527,9 +528,9 @@ Now create the connector using the Kafka Connect REST API. (Note: Make sure you 
 
     Check the Control Center UI and should see both the source and sink running in Kafka Connect.
 
-    [!Signup](/img/c3-quickstart-connect-view-src)
+    (/img/c3-quickstart-connect-view-src)
 
-    [!Signup](/img/c3-quickstart-connect-view-sink)
+    /img/c3-quickstart-connect-view-sink
 
   You should start to see stream monitoring data from Kafka Connect in the Control Center UI from our previous commands.
 
