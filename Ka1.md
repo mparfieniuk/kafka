@@ -337,7 +337,7 @@ After saving the trigger, Control Center will now prompt us to associate an acti
 
 Let’s return to our trigger history page. In a short while, you should see a new trigger show up in our alert history. This is because we setup our consumer to consume data at a slower rate than our producer.
 
-![Signup](/img/c3-quickstart-alerts-history)
+![Signup](/img/c3-quickstart-alerts-history.png)
 
 #Kafka Connect
 
@@ -403,7 +403,7 @@ For this example, we’ll create a FileSourceConnector, a FileSinkConnector and 
    ```
    Next, start a Connect worker in distributed mode:
 
-   ```bash
+   ```
    docker run -d \
     --name=kafka-connect \
     --net=host \
@@ -423,7 +423,7 @@ For this example, we’ll create a FileSourceConnector, a FileSinkConnector and 
     -e CONNECT_LOG4J_ROOT_LOGLEVEL=DEBUG \
     -v /tmp/quickstart/file:/tmp/quickstart \
     confluentinc/cp-kafka-connect:3.1.1
-    ```
+   ```
 
   As you can see in the command above, we tell Connect to refer to the three topics we create in the first step of this Connect tutorial. Let’s check to make sure that the Connect worker is up by running the following command to search the logs:
 
