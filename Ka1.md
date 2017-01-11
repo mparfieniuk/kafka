@@ -431,23 +431,23 @@ For this example, we’ll create a FileSourceConnector, a FileSinkConnector and 
     docker logs kafka-connect | grep started
   ```
 
-    You should see the following
+  You should see the following
 
   ```
     [2016-08-25 18:25:19,665] INFO Herder started (org.apache.kafka.connect.runtime.distributed.DistributedHerder)
     [2016-08-25 18:25:19,676] INFO Kafka Connect started (org.apache.kafka.connect.runtime.Connect)
   ```
 
-    We will now create our first connector for reading a file from disk. To do this, let’s start by creating a file with some data. Again, if you are running Docker Machine then you will need to SSH into the VM to run these commands by running `docker-machine ssh <your machine name>`. (You may also need to run the command as root).
+  We will now create our first connector for reading a file from disk. To do this, let’s start by creating a file with some data. Again, if you are running Docker Machine then you will need to SSH into the VM to run these commands by running `docker-machine ssh <your machine name>`. (You may also need to run the command as root).
 
-  ```bash
+  ```
     seq 1000 > /tmp/quickstart/file/input.txt
   ```
 Now create the connector using the Kafka Connect REST API. (Note: Make sure you have `curl` installed!)
 
-    Set the `CONNECT_HOST` environment variable. If you are running this on Docker Machine, then the hostname will need to be `docker-machine ip <your docker machine name>``. If you are running on a cloud provider like AWS, you will either need to have port `28082` open or you can SSH into the VM and run the following command:
+  Set the `CONNECT_HOST` environment variable. If you are running this on Docker Machine, then the hostname will need to be `docker-machine ip <your docker machine name>``. If you are running on a cloud provider like AWS, you will either need to have port `28082` open or you can SSH into the VM and run the following command:
 
-    ```bash
+    ```
     export CONNECT_HOST=localhost
     ```
     The next step is to create the File Source connector.
@@ -458,17 +458,17 @@ Now create the connector using the Kafka Connect REST API. (Note: Make sure you 
       --data '{"name": "quickstart-file-source", "config": {"connector.class":"org.apache.kafka.connect.file.FileStreamSourceConnector", "tasks.max":"1", "topic":"quickstart-data", "file": "/tmp/quickstart/input.txt"}}' \
       http://$CONNECT_HOST:28082/connectors
     ```
-    Upon running the command, you should see the following output in your terminal window:
+  Upon running the command, you should see the following output in your terminal window:
 
     ```bash
     {"name":"quickstart-file-source","config":{"connector.class":"org.apache.kafka.connect.file.FileStreamSourceConnector","tasks.max":"1","topic":"quickstart-data","file":"/tmp/quickstart/input.txt","name":"quickstart-file-source"},"tasks":[]}
     ```
-    Before moving on, let’s check the status of the connector using curl as shown below:
+  Before moving on, let’s check the status of the connector using curl as shown below:
 
     ```bash
     curl -X GET http://$CONNECT_HOST:28082/connectors/quickstart-file-source/status
     ```
-    You should see the following output including the `state` of the connector as `RUNNING`:
+  You should see the following output including the `state` of the connector as `RUNNING`:
 
     ```bash
     {"name":"quickstart-file-source","connector":{"state":"RUNNING","worker_id":"localhost:28082"},"tasks":[{"state":"RUNNING","id":0,"worker_id":"localhost:28082"}]}
@@ -482,7 +482,7 @@ Now create the connector using the Kafka Connect REST API. (Note: Make sure you 
       confluentinc/cp-kafka:3.1.1 \
       kafka-console-consumer --bootstrap-server localhost:29092 --topic quickstart-data --new-consumer --from-beginning --max-messages 10
     ```
-    You should see the following:
+  You should see the following:
 
     ```bash
     {"schema":{"type":"string","optional":false},"payload":"1"}
@@ -497,7 +497,7 @@ Now create the connector using the Kafka Connect REST API. (Note: Make sure you 
     {"schema":{"type":"string","optional":false},"payload":"10"}
     Processed a total of 10 messages
     ```
-    Success! We now have a functioning source connector! Now let’s bring balance to the universe by launching a File Sink to read from this topic and write to an output file. You can do so using the following command:
+  Success! We now have a functioning source connector! Now let’s bring balance to the universe by launching a File Sink to read from this topic and write to an output file. You can do so using the following command:
 
     ```bash
     curl -X POST -H "Content-Type: application/json" \
@@ -505,23 +505,23 @@ Now create the connector using the Kafka Connect REST API. (Note: Make sure you 
     http://$CONNECT_HOST:28082/connectors
     ```
 
-    You should see the output below in your terminal window, confirming that the `quickstart-file-sink` connector has been created and will write to `/tmp/quickstart/output.txt`:
+  You should see the output below in your terminal window, confirming that the `quickstart-file-sink` connector has been created and will write to `/tmp/quickstart/output.txt`:
 
     ```bash
     {"name":"quickstart-file-sink","config":{"connector.class":"org.apache.kafka.connect.file.FileStreamSinkConnector","tasks.max":"1","topics":"quickstart-data","file":"/tmp/quickstart/output.txt","name":"quickstart-file-sink"},"tasks":[]}
     ```
-    As we did before, let’s check the status of the connector:
+  As we did before, let’s check the status of the connector:
 
     ```bash
     curl -s -X GET http://$CONNECT_HOST:28082/connectors/quickstart-file-sink/status
     ```
-    Finally, let’s check the file to see if the data is present. Once again, you will need to SSH into the VM if you are running Docker Machine.
+  Finally, let’s check the file to see if the data is present. Once again, you will need to SSH into the VM if you are running Docker Machine.
 
     ```
     cat /tmp/quickstart/file/output.txt
     ```
 
-    If everything worked as planned, you should see all of the data we originally wrote to the input file:
+  If everything worked as planned, you should see all of the data we originally wrote to the input file:
     ```
     1
     ...
@@ -531,15 +531,15 @@ Now create the connector using the Kafka Connect REST API. (Note: Make sure you 
 
   Next we’ll see how to monitor Kafka Connect in Control Center using the monitoring interceptors and the source and sink previously created.
 
-    Check the Control Center UI and should see both the source and sink running in Kafka Connect.
+  Check the Control Center UI and should see both the source and sink running in Kafka Connect.
 
-    (/img/c3-quickstart-connect-view-src)
+  ![Signup](/img/c3-quickstart-connect-view-src)
 
-    /img/c3-quickstart-connect-view-sink
+  ![Signup](/img/c3-quickstart-connect-view-sink)
 
   You should start to see stream monitoring data from Kafka Connect in the Control Center UI from our previous commands.
 
-    [!Signup](/img/c3-quickstart-connect-monitoring)
+  ![Signup](/img/c3-quickstart-connect-monitoring)
 
 
 #Cleanup
