@@ -211,13 +211,14 @@ We will walk you through how to run Confluent Control Center with console produc
 
   First, let’s launch Confluent Control Center. We already have ZooKeeper and Kafka up and running from the steps above. Let’s make a directory on the host for Control Center data. If you are running Docker Machine then you will need to SSH into the VM to run these commands by running `docker-machine ssh <your machine name>` and run the command as root.
 
-    ```
-    mkdir -p /tmp/control-center/data
-    ```
+  ```
+  mkdir -p /tmp/control-center/data
+  ```
+
 
   Now we start Control Center and bind it’s data directory to the directory we just created and bind it’s HTTP interface to port 9021.
 
-    ```
+  ```
     bash
     docker run -d \
       --name=control-center \
@@ -233,7 +234,7 @@ We will walk you through how to run Confluent Control Center with console produc
       -e CONTROL_CENTER_STREAMS_NUM_STREAM_THREADS=2 \
       -e CONTROL_CENTER_CONNECT_CLUSTER=http://localhost:28082 \
       confluentinc/cp-enterprise-control-center:3.1.1
-    ```
+  ```
 
   Control Center will create the topics it needs in Kafka. Check that it started correctly by searching it’s logs with the following command:
 
