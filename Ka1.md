@@ -403,7 +403,7 @@ For this example, we’ll create a FileSourceConnector, a FileSinkConnector and 
    ```
    Next, start a Connect worker in distributed mode:
 
-   ```
+   ```bash
    docker run -d \
     --name=kafka-connect \
     --net=host \
@@ -433,14 +433,14 @@ For this example, we’ll create a FileSourceConnector, a FileSinkConnector and 
 
   You should see the following
 
-  ```
+  ```bash
     [2016-08-25 18:25:19,665] INFO Herder started (org.apache.kafka.connect.runtime.distributed.DistributedHerder)
     [2016-08-25 18:25:19,676] INFO Kafka Connect started (org.apache.kafka.connect.runtime.Connect)
   ```
 
   We will now create our first connector for reading a file from disk. To do this, let’s start by creating a file with some data. Again, if you are running Docker Machine then you will need to SSH into the VM to run these commands by running `docker-machine ssh <your machine name>`. (You may also need to run the command as root).
 
-  ```
+  ```bash
     seq 1000 > /tmp/quickstart/file/input.txt
   ```
   Now create the connector using the Kafka Connect REST API. (Note: Make sure you have `curl` installed!)
@@ -453,7 +453,7 @@ For this example, we’ll create a FileSourceConnector, a FileSinkConnector and 
 
   The next step is to create the File Source connector.
 
-  ```
+  ```bash
     curl -X POST \
       -H "Content-Type: application/json" \
       --data '{"name": "quickstart-file-source", "config": {"connector.class":"org.apache.kafka.connect.file.FileStreamSourceConnector", "tasks.max":"1", "topic":"quickstart-data", "file": "/tmp/quickstart/input.txt"}}' \
