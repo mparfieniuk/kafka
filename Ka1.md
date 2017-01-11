@@ -371,9 +371,8 @@ First, let’s start up Kafka Connect. Connect stores config, status, and intern
   ```
 
 ###Note!
-  ```
-  It is possible to allow connect to auto-create these topics by enabling the autocreation setting. However, we recommend doing it manually, as these topics are important for connect to function and you’ll likely want to control settings such as replication factor and number of partitions.
-  ```
+#####It is possible to allow connect to auto-create these topics by enabling the autocreation setting. However, we recommend doing it manually, as these topics are important for connect to function and you’ll likely want to control settings such as replication factor and number of partitions.
+
 Next, we’ll create a topic for storing data that we’re going to be sending to Kafka for this tutorial.
 
   ```
@@ -386,7 +385,7 @@ Next, we’ll create a topic for storing data that we’re going to be sending t
 
   Now you should verify that the topics are created before moving on:
 
-  ```
+  ```bash
    vdocker run \
    --net=host \
    --rm \
@@ -398,7 +397,7 @@ For this example, we’ll create a FileSourceConnector, a FileSinkConnector and 
 
    First, let’s create the directory where we’ll store the input and output data files:
 
-   ```
+   ```bash
    mkdir -p /tmp/quickstart/file
    ```
    Next, start a Connect worker in distributed mode:
@@ -447,7 +446,7 @@ For this example, we’ll create a FileSourceConnector, a FileSinkConnector and 
 
   Set the `CONNECT_HOST` environment variable. If you are running this on Docker Machine, then the hostname will need to be `docker-machine ip <your docker machine name>`. If you are running on a cloud provider like AWS, you will either need to have port `28082` open or you can SSH into the VM and run the following command:
 
-  ```
+  ```bash
     export CONNECT_HOST=localhost
   ```
 
@@ -479,7 +478,7 @@ For this example, we’ll create a FileSourceConnector, a FileSinkConnector and 
 
   Now that the connector is up and running, let’s try reading a sample of 10 records from the `quickstart-data` topic to check if the connector is uploading data to Kafka, as expected.
 
-  ```
+  ```bash
     docker run \
       --net=host \
       --rm \
