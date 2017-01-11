@@ -443,21 +443,22 @@ For this example, we’ll create a FileSourceConnector, a FileSinkConnector and 
   ```
     seq 1000 > /tmp/quickstart/file/input.txt
   ```
-Now create the connector using the Kafka Connect REST API. (Note: Make sure you have `curl` installed!)
+  Now create the connector using the Kafka Connect REST API. (Note: Make sure you have `curl` installed!)
 
-  Set the `CONNECT_HOST` environment variable. If you are running this on Docker Machine, then the hostname will need to be `docker-machine ip <your docker machine name>``. If you are running on a cloud provider like AWS, you will either need to have port `28082` open or you can SSH into the VM and run the following command:
+  Set the `CONNECT_HOST` environment variable. If you are running this on Docker Machine, then the hostname will need to be `docker-machine ip <your docker machine name>`. If you are running on a cloud provider like AWS, you will either need to have port `28082` open or you can SSH into the VM and run the following command:
 
-    ```
+  ```
     export CONNECT_HOST=localhost
-    ```
-    The next step is to create the File Source connector.
+  ```
 
-    ```bash
+  The next step is to create the File Source connector.
+
+  ```
     curl -X POST \
       -H "Content-Type: application/json" \
       --data '{"name": "quickstart-file-source", "config": {"connector.class":"org.apache.kafka.connect.file.FileStreamSourceConnector", "tasks.max":"1", "topic":"quickstart-data", "file": "/tmp/quickstart/input.txt"}}' \
       http://$CONNECT_HOST:28082/connectors
-    ```
+  ```
   Upon running the command, you should see the following output in your terminal window:
 
     ```bash
