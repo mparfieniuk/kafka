@@ -461,31 +461,34 @@ For this example, we’ll create a FileSourceConnector, a FileSinkConnector and 
   ```
   Upon running the command, you should see the following output in your terminal window:
 
-    ```bash
+  ```bash
     {"name":"quickstart-file-source","config":{"connector.class":"org.apache.kafka.connect.file.FileStreamSourceConnector","tasks.max":"1","topic":"quickstart-data","file":"/tmp/quickstart/input.txt","name":"quickstart-file-source"},"tasks":[]}
-    ```
+  ```
+
   Before moving on, let’s check the status of the connector using curl as shown below:
 
-    ```bash
+  ```bash
     curl -X GET http://$CONNECT_HOST:28082/connectors/quickstart-file-source/status
-    ```
+  ```
+
   You should see the following output including the `state` of the connector as `RUNNING`:
 
-    ```bash
+  ```bash
     {"name":"quickstart-file-source","connector":{"state":"RUNNING","worker_id":"localhost:28082"},"tasks":[{"state":"RUNNING","id":0,"worker_id":"localhost:28082"}]}
-    ```
+  ```
+
   Now that the connector is up and running, let’s try reading a sample of 10 records from the `quickstart-data` topic to check if the connector is uploading data to Kafka, as expected.
 
-    ```
+  ```
     docker run \
       --net=host \
       --rm \
       confluentinc/cp-kafka:3.1.1 \
       kafka-console-consumer --bootstrap-server localhost:29092 --topic quickstart-data --new-consumer --from-beginning --max-messages 10
-    ```
+  ```
   You should see the following:
 
-    ```bash
+  ```bash
     {"schema":{"type":"string","optional":false},"payload":"1"}
     {"schema":{"type":"string","optional":false},"payload":"2"}
     {"schema":{"type":"string","optional":false},"payload":"3"}
@@ -497,7 +500,7 @@ For this example, we’ll create a FileSourceConnector, a FileSinkConnector and 
     {"schema":{"type":"string","optional":false},"payload":"9"}
     {"schema":{"type":"string","optional":false},"payload":"10"}
     Processed a total of 10 messages
-    ```
+  ```
   Success! We now have a functioning source connector! Now let’s bring balance to the universe by launching a File Sink to read from this topic and write to an output file. You can do so using the following command:
 
     ```bash
