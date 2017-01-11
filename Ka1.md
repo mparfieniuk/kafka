@@ -324,7 +324,7 @@ The Overview link the lefthand sidebar takes you to a page which displays a hist
 
 Let’s configure a trigger to fire when the difference between our actual consumption and expected consumption is greater than 1000 messages:
 
-[!Singup](/img/c3-quickstart-new-trigger-form.png)
+![Singup](/img/c3-quickstart-new-trigger-form.png)
 
 
 Set the trigger name to be “Underconsumption”, which is what will be displayed on the history page when our trigger fires. We need to assign `qs-consumer`, which we created previously, to our trigger.
@@ -333,11 +333,11 @@ Set the trigger metric to be “Consumption difference” where the condition is
 
 After saving the trigger, Control Center will now prompt us to associate an action that will fire when our newly created trigger occurs. For now, the only action is send an email. Select our new trigger and choose maximum send rate for your alert email.
 
-[!Singup](/img/c3-quickstart-new-action-form.png)
+![Singup](/img/c3-quickstart-new-action-form.png)
 
 Let’s return to our trigger history page. In a short while, you should see a new trigger show up in our alert history. This is because we setup our consumer to consume data at a slower rate than our producer.
 
-[!Signup](/img/c3-quickstart-alerts-history)
+![Signup](/img/c3-quickstart-alerts-history)
 
 #Kafka Connect
 
@@ -425,7 +425,7 @@ For this example, we’ll create a FileSourceConnector, a FileSinkConnector and 
     confluentinc/cp-kafka-connect:3.1.1
     ```
 
-    As you can see in the command above, we tell Connect to refer to the three topics we create in the first step of this Connect tutorial. Let’s check to make sure that the Connect worker is up by running the following command to search the logs:
+  As you can see in the command above, we tell Connect to refer to the three topics we create in the first step of this Connect tutorial. Let’s check to make sure that the Connect worker is up by running the following command to search the logs:
 
     ```
     docker logs kafka-connect | grep started
