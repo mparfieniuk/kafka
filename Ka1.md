@@ -160,7 +160,7 @@ When you’re done, use `Ctrl+C` to shut down the process. You can also type `ex
 #REST Proxy
 Consume data via the REST Proxy.
 
-    First, start up the REST Proxy:
+  First, start up the REST Proxy:
 
     ```
     docker run -d \
