@@ -218,8 +218,7 @@ We will walk you through how to run Confluent Control Center with console produc
 
   Now we start Control Center and bind it’s data directory to the directory we just created and bind it’s HTTP interface to port 9021.
 
-  ```
-    bash
+  ```bash
     docker run -d \
       --name=control-center \
       --net=host \
