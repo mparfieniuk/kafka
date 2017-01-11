@@ -1,8 +1,56 @@
+# Running Confluent Platform on Docker
+
+If you’re running on Windows or Mac OS X, you’ll need to use Docker Machine to start the Docker host. Docker runs natively on Linux, so the Docker host will be your local machine if you go that route. If you are running on Mac or Windows, be sure to allocate at least 4 GB of ram to the Docker Machine.
+
+Now that we have all of the Docker dependencies installed, we can create a Docker machine and begin starting up Confluent Platform.
+
+### Note!
+#####In the following steps we’ll be running each Docker container in detached mode. However, we’ll also demonstrate how access the logs for a running container. If you prefer to run the containers in the foreground, you can do so by replacing the `-d` flags with `--it`.
+
+Create and configure the Docker Machine.
+
+```bash
+docker-machine create --driver virtualbox --virtualbox-memory 6000 confluent
+```
+Next, configure your terminal window to attach it to your new Docker Machine:
+```bash
+eval $(docker-machine env confluent)
+
+```
+#Zookeeper
+
+Start Zookeeper. You’ll need to keep this service running throughout, so if you will be running things in the foreground, you’ll need to have it in a dedicated terminal window.
+
+```
+docker run -d \
+    --net=host \
+    --name=zookeeper \
+    -e ZOOKEEPER_CLIENT_PORT=32181 \
+    confluentinc/cp-zookeeper:3.1.1
+```
+
+In this command, we tell Docker to run the `confluentinc/cp-zookeeper:3.1.1` container named `zookeeper`. We also specify that we want to use host networking and pass in the required parameter for running Zookeeper: `ZOOKEEPER_CLIENT_PORT`. For a full list of the available configuration options and more details on passing environment variables into Docker containers, please see the configuration reference docs. (http://docs.confluent.io/3.1.1/cp-docker-images/docs/configuration.html)
+
+Now that we’ve attempted to start Zookeeper, we’ll check the logs to see the server has booted up successfully by running the following command:
+
+```
+docker logs zookeeper
+```
+
+With this command, we’re referencing the container name we want to see the logs for. To list all containers (running or failed), you can always run `docker ps -a`. This is especially useful when running in detached mode.
+
+When you output the logs for Zookeeper, you should see the following message at the end of the log output:
+
+```bash
+[2016-07-24 05:15:35,453] INFO binding to port 0.0.0.0/0.0.0.0:32181 (org.apache.zookeeper.server.NIOServerCnxnFactory)
+```
+
+
 # Kafka
 
 ### Start Kafka
 
-```
+```bash
 docker run -d \
     --net=host \
     --name=kafka \
@@ -12,10 +60,8 @@ docker run -d \
 ```
 
 ### Note!
-```
-You’ll notice that we set the KAFKA_ADVERTISED_LISTENERS variable to localhost:29092.
+#####You’ll notice that we set the KAFKA_ADVERTISED_LISTENERS variable to localhost:29092.
 This will make Kafka accessible from outside the container by advertising it’s location on the Docker host.
-```
 
 Let’s check the logs to see the broker has booted up successfully:
 
@@ -42,7 +88,7 @@ Take it for a test drive. Test that the broker is functioning as expected by cre
 
 First, we’ll create a topic. We’ll name it `foo` and keep things simple by just giving it one partition and only one replica. You’ll likely want to increase both if you’re running in a more high-stakes environment in which you are concerned about data loss.
 
-```
+```bash
 docker run \
 --net=host \
 --rm confluentinc/cp-kafka:3.1.1 \
@@ -56,7 +102,7 @@ Created topic "foo".
 
 Before moving on, verify that the topic was created successfully:
 
-```
+```bash
 docker run \
 --net=host \
 --rm confluentinc/cp-kafka:3.1.1 \
@@ -65,14 +111,14 @@ kafka-topics --describe --topic foo --zookeeper localhost:32181
 
 You should see the following output in your terminal window:
 
-```
+```bash
 Topic:foo   PartitionCount:1    ReplicationFactor:1 Configs:
 Topic: foo  Partition: 0    Leader: 1001    Replicas: 1001  Isr: 1001
 ```
 
 Next, we’ll try generating some data to our new topic:
 
-  ```
+  ```bash
   docker run \
   --net=host \
   --rm \
@@ -87,7 +133,7 @@ Produced 42 messages.
 ```
 To complete the story, let’s read back the message using the built-in Console consumer:
 
-```
+```bash
 docker run \
   --net=host \
   --rm \
@@ -97,7 +143,7 @@ docker run \
 
   If everything is working as expected, each of the original messages we produced should be written back out:
 
-```
+```bash
   1
   ....
   42
@@ -110,7 +156,7 @@ Now we have all Kafka and Zookeeper up and running, we can start trying out some
 
   First, let’s fire up the Schema Registry container:
 
-  ```
+  ```bash
   docker run -d \
   --net=host \
   --name=schema-registry \
@@ -135,7 +181,7 @@ Now we have all Kafka and Zookeeper up and running, we can start trying out some
 
   Direct the utility at the local Kafka cluster, tell it to write to the topic `bar`, read each line of input as an Avro message, validate the schema against the Schema Registry at the specified URL, and finally indicate the format of the data.
 
-  ```
+  ```bash
   /usr/bin/kafka-avro-console-producer \
   --broker-list localhost:29092 --topic bar \
   --property value.schema='{"type":"record","name":"myrecord","fields":[{"name":"f1","type":"string"}]}'
@@ -143,17 +189,15 @@ Now we have all Kafka and Zookeeper up and running, we can start trying out some
 
   Once started, the process will wait for you to enter messages, one per line, and will send them immediately when you hit the Enter key. Try entering a few messages:
 
-  ```
+  ```bash
   {"f1": "value1"}
   {"f1": "value2
-  n
   {"f1": "value3"}
   ```
 
 ### Note!
-```
-If you hit `Enter` with an empty line, it will be interpreted as a null value and cause an error. You can simply start the console producer again to continue sending messages.
-```
+#####If you hit `Enter` with an empty line, it will be interpreted as a null value and cause an error. You can simply start the console producer again to continue sending messages.
+
 When you’re done, use `Ctrl+C` to shut down the process. You can also type `exit` to leave the container. Now that we wrote avro data to Kafka, we should check that the data was actually produced as expected by trying to consume it. Although the Schema Registry also ships with a built-in console consumer utility, we’ll instead demonstrate how to read it from outside the container on our local machine via the REST Proxy. The REST Proxy depends on the Schema Registry when producing/consuming avro data, so let’s leave the container running as we head to the next step.
 
 
@@ -180,7 +224,7 @@ Consume data via the REST Proxy.
   ```
   Next, we’ll need to create a consumer for Avro data, starting at the beginning of the log for our topic, `bar`.
 
-  ```
+  ```bash
   curl -X POST -H "Content-Type: application/vnd.kafka.v1+json" \
   --data '{"name": "my_consumer_instance", "format": "avro", "auto.offset.reset": "smallest"}' \
   http://localhost:8082/consumers/my_avro_consumer
@@ -188,7 +232,7 @@ Consume data via the REST Proxy.
 
   You should see the following in your terminal window:
 
-  ```
+  ```bash
   {"instance_id":"my_consumer_instance","base_uri":"http://localhost:8082/consumers/my_avro_consumer/instances/my_consumer_instance"}
   ```
   Now we’ll consume some data from a topic. It will be decoded, translated to JSON, and included in the response. The schema used for deserialization is fetched automatically from the Schema Registry, which we told the REST Proxy how to find by setting the `KAFKA_REST_SCHEMA_REGISTRY_URL` variable on startup.
@@ -258,7 +302,7 @@ We will walk you through how to run Confluent Control Center with console produc
   Next, we’ll run the console producer and consumer with monitoring interceptors configured and see the data in Control Center. First we need to create a topic for testing.
 
 
-  ```
+  ```bash
   docker run \
   --net=host \
   --rm confluentinc/cp-kafka:3.1.1 \
@@ -344,25 +388,25 @@ Let’s return to our trigger history page. In a short while, you should see a n
 ### Getting Started
 
 Getting Started
-We will walk you through an end-to-end data transfer pipeline using Kafka Connect. We’ll start by reading data from a file and writing that data to a new file. We will then extend the pipeline to show how to use connect to read from a database. This example is meant to be simple for the sake of this introductory tutorial. If you’d like a more in-depth example, please refer to (/our tutorial on using a JDBC connector with avro data).
+We will walk you through an end-to-end data transfer pipeline using Kafka Connect. We’ll start by reading data from a file and writing that data to a new file. We will then extend the pipeline to show how to use connect to read from a database. This example is meant to be simple for the sake of this introductory tutorial. If you’d like a more in-depth example, please refer to our tutorial on using a JDBC connector with avro data. (http://docs.confluent.io/3.1.1/cp-docker-images/docs/tutorials/connect-avro-jdbc.html)
 
 First, let’s start up Kafka Connect. Connect stores config, status, and internal offsets for connectors in Kafka topics. We will create these topics now. We already have Kafka up and running from the steps above.
 
-  ```
+  ```bash
   docker run \
   --net=host \
   --rm \
   confluentinc/cp-kafka:3.1.1 \
   kafka-topics --create --topic quickstart-offsets --partitions 1 --replication-factor 1 --if-not-exists --zookeeper localhost:32181
   ```
-  ```
+  ```bash
   docker run \
   --net=host \
   --rm \
   confluentinc/cp-kafka:3.1.1 \
   kafka-topics --create --topic quickstart-config --partitions 1 --replication-factor 1 --if-not-exists --zookeeper localhost:32181
   ```
-  ```
+  ```bash
   docker run \
   --net=host \
   --rm \
@@ -375,7 +419,7 @@ First, let’s start up Kafka Connect. Connect stores config, status, and intern
 
 Next, we’ll create a topic for storing data that we’re going to be sending to Kafka for this tutorial.
 
-  ```
+  ```bash
   docker run \
   --net=host \
   --rm \
