@@ -503,47 +503,49 @@ For this example, we’ll create a FileSourceConnector, a FileSinkConnector and 
   ```
   Success! We now have a functioning source connector! Now let’s bring balance to the universe by launching a File Sink to read from this topic and write to an output file. You can do so using the following command:
 
-    ```bash
+  ```bash
     curl -X POST -H "Content-Type: application/json" \
     --data '{"name": "quickstart-file-sink", "config": {"connector.class":"org.apache.kafka.connect.file.FileStreamSinkConnector", "tasks.max":"1", "topics":"quickstart-data", "file": "/tmp/quickstart/output.txt"}}' \
     http://$CONNECT_HOST:28082/connectors
-    ```
+  ```
 
   You should see the output below in your terminal window, confirming that the `quickstart-file-sink` connector has been created and will write to `/tmp/quickstart/output.txt`:
 
-    ```bash
+  ```bash
     {"name":"quickstart-file-sink","config":{"connector.class":"org.apache.kafka.connect.file.FileStreamSinkConnector","tasks.max":"1","topics":"quickstart-data","file":"/tmp/quickstart/output.txt","name":"quickstart-file-sink"},"tasks":[]}
-    ```
+  ```
   As we did before, let’s check the status of the connector:
 
-    ```bash
+  ```bash
     curl -s -X GET http://$CONNECT_HOST:28082/connectors/quickstart-file-sink/status
-    ```
+  ```
+
   Finally, let’s check the file to see if the data is present. Once again, you will need to SSH into the VM if you are running Docker Machine.
 
-    ```
+  ```
     cat /tmp/quickstart/file/output.txt
-    ```
+  ```
 
   If everything worked as planned, you should see all of the data we originally wrote to the input file:
-    ```
+  ```
     1
     ...
     1000
-    ```
+  ```
+
 ### Monitoring in Control Center
 
   Next we’ll see how to monitor Kafka Connect in Control Center using the monitoring interceptors and the source and sink previously created.
 
   Check the Control Center UI and should see both the source and sink running in Kafka Connect.
 
-  ![Signup](/img/c3-quickstart-connect-view-src)
+  ![Signup](/img/c3-quickstart-connect-view-src.png)
 
-  ![Signup](/img/c3-quickstart-connect-view-sink)
+  ![Signup](/img/c3-quickstart-connect-view-sink.png)
 
   You should start to see stream monitoring data from Kafka Connect in the Control Center UI from our previous commands.
 
-  ![Signup](/img/c3-quickstart-connect-monitoring)
+  ![Signup](/img/c3-quickstart-connect-monitoring.png)
 
 
 #Cleanup
