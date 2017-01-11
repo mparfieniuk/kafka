@@ -162,16 +162,17 @@ Consume data via the REST Proxy.
 
     First, start up the REST Proxy:
 
-  ```
-  docker run -d \
-      --net=host \
-      --name=kafka-rest \
-      -e KAFKA_REST_ZOOKEEPER_CONNECT=localhost:32181 \
-      -e KAFKA_REST_LISTENERS=http://localhost:8082 \
-      -e KAFKA_REST_SCHEMA_REGISTRY_URL=http://localhost:8081 \
-      -e KAFKA_REST_HOST_NAME=localhost \
-      confluentinc/cp-kafka-rest:3.1.1
-  ```
+    ```
+    docker run -d \
+        --net=host \
+        --name=kafka-rest \
+        -e KAFKA_REST_ZOOKEEPER_CONNECT=localhost:32181 \
+        -e KAFKA_REST_LISTENERS=http://localhost:8082 \
+        -e KAFKA_REST_SCHEMA_REGISTRY_URL=http://localhost:8081 \
+        -e KAFKA_REST_HOST_NAME=localhost \
+        confluentinc/cp-kafka-rest:3.1.1
+    ```
+
   For the next two steps, we’re going to use CURL commands to talk to the REST Proxy. For the sake of simplicity, the Schema Registry and REST Proxy containers on same host with the REST Proxy listening at http://localhost:8082.
 
   ```
